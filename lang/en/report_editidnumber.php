@@ -25,6 +25,10 @@
 defined('MOODLE_INTERNAL') || die;
 
 
+$string['activityfilter'] = 'Activity view filter <small>(changing this filter will not save the remaining form data)</small>';
+$string['activitytypefilter'] = 'Activity type';
+$string['activitytypefilter_help'] = 'Use the filter to select activities to view and modify. Applying the filter will change the form display but will not save any existing changes.';
+$string['applyactivitytypefilter'] = 'Apply activity type filter';
 $string['editidnumber'] = 'ID Numbers';
 $string['editidnumber:view'] = 'View ID Number report';
 $string['gradebookidnumbers'] = 'Gradebook ID numbers';

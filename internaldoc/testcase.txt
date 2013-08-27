@@ -1,0 +1,30 @@
+Initial Setup
+=============
+
+You need one test course with a few activities (fewer than 50) and at least one
+custom grade-item in the gradebook; and one test course with many activities
+(more than 50), including at least one of each type.
+
+Test script
+===========
+
+1.  In the small course, go to Administration -> Reports -> ID numbers.
+2.  At the top will be an 'Activity type' selector. This should be set to 'All activities'.
+3.  Then there will be a form with sections below for each course section that
+    contains relevant activities. At the end all the grade-items in the course
+    will be listed.
+4.  Each activity that can have an idnumber will be listed with its current idnumber, if any.
+5.  Change some activity idnumbers here, then go to the standard edit settings page for that
+    activity, and ensure that the changed settings have been saved.
+6.  Change some idnumbers in the standard activity settings from, go back to
+    the report, and ensure the updated idnumbers are shown there.
+7.  For any grade-item related to an activity (e.g. a quiz) make sure that you
+    are not allowed to directly change the grade-item idnumber. It should tell you
+    to "See above".
+8.  Change the idnumber for a custom grade-item. Check that the idnumber changes
+    in the gradebook settings form.
+9.  Change the idnumber in the gradebook settings form, and go back to the report,
+    and verify the idnumber has changed there.
+10. Now go the report for the big course. The report will automatically
+    swtich to only show one type of activity, to stop the form from being too big.
+11. Try switching activity type, and ensure that works.

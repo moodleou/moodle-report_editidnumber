@@ -38,11 +38,11 @@ function xmldb_report_editidnumber_install() {
                 array('capability' => 'coursereport/editidnumber:view'));
     }
 
-    // This is a hack which is needed for cleanup of original coursereport_completion stuff
+    // This is a hack which is needed for cleanup of original coursereport_completion stuff.
     unset_all_config_for_plugin('coursereport_editidnumber');
     capabilities_cleanup('coursereport_editidnumber');
 
-    // Update existing block page patterns
+    // Update existing block page patterns.
     $DB->set_field('block_instances', 'pagetypepattern', 'report-editidnumber-index',
             array('pagetypepattern' => 'course-report-editidnumber-index'));
 }

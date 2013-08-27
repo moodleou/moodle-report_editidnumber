@@ -27,120 +27,155 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->dirroot . '/course/lib.php');
 require_once(dirname(__FILE__) . '/form.php');
 
-$id = required_param('id', PARAM_INT);       // course id
+define('REPORT_EDITIDNUMBER_ENABLE_FILTER_THRESHOLD', 50);
 
-//should be a valid course id
-if (!$course = $DB->get_record('course', array('id' => $id))) {
-    print_error('invalidcourseid');
-}
+$id = required_param('id', PARAM_INT); // Course id.
+$activitytype = optional_param('activitytype', '', PARAM_PLUGIN);
 
-// needed to setup proper $COURSE
+// Should be a valid course id.
+$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+
 require_login($course);
 
-//setting page url
-$PAGE->set_url('/report/editidnumber/index.php', array('id' => $id));
-//setting page layout to report
-$PAGE->set_pagelayout('report');
+// Setup page.
+$urlparams = array('id' => $id);
+if ($activitytype) {
+    $urlparams['activitytype'] = $activitytype;
+}
+$PAGE->set_url('/report/editidnumber/index.php', $urlparams);
+$PAGE->set_pagelayout('admin');
 
-//coursecontext instance
-$coursecontext = get_context_instance(CONTEXT_COURSE, $course->id);
-
-//checking if user is capable of viewing this report in $coursecontext
+// Check permissions.
+$coursecontext = context_course::instance($course->id);
 require_capability('report/editidnumber:view', $coursecontext);
 
-//strings
-$stridnumberreport = get_string('editidnumber' , 'report_editidnumber');
-
-//fetching all modules in the course
+// Fetching all modules in the course.
 $modinfo = get_fast_modinfo($course);
+$cms = $modinfo->get_cms();
 
-//creating form instance, passed course id as parameter to action url
-$mform = new report_editidnumber_form( new moodle_url('index.php', array('id' => $id)),
-            array('modinfo' => $modinfo, 'course' => $course));
-//create the return url after form processing
+// Prepare a list of activity types used in this course, and count the number that
+// might be displayed.
+$activitiesdisplayed = 0;
+$activitytypes = array();
+foreach ($modinfo->get_sections() as $sectionnum => $section) {
+    foreach ($section as $cmid) {
+        $cm = $cms[$cmid];
+
+        // Filter activities to those that are relevant to this report.
+        if (!$cm->uservisible || !plugin_supports('mod', $cm->modname, FEATURE_IDNUMBER, true)) {
+            continue;
+        }
+
+        $activitiesdisplayed += 1;
+        $activitytypes[$cm->modname] = get_string('modulename', $cm->modname);
+    }
+}
+collatorlib::asort($activitytypes);
+
+if ($activitiesdisplayed <= REPORT_EDITIDNUMBER_ENABLE_FILTER_THRESHOLD) {
+    $activitytypes = array('' => get_string('all')) + $activitytypes;
+}
+
+// If activity count is above the threshold, activate the filter controls.
+if (!$activitytype && $activitiesdisplayed > REPORT_EDITIDNUMBER_ENABLE_FILTER_THRESHOLD) {
+    reset($activitytypes);
+    redirect(new moodle_url('/report/editidnumber/index.php',
+            array('id' => $id, 'activitytype' => key($activitytypes))));
+}
+
+// Creating form instance, passed course id as parameter to action url.
+$baseurl = new moodle_url('/report/editidnumber/index.php', array('id' => $id));
+$mform = new report_editidnumber_form($baseurl, array('modinfo' => $modinfo,
+        'course' => $course, 'activitytype' => $activitytype));
+
 $returnurl = new moodle_url('/course/view.php', array('id' => $id));
 if ($mform->is_cancelled()) {
-    //proper redirection if form is cancelled
+    // Redirect to course view page if form is cancelled.
     redirect($returnurl);
+
 } else if ($data = $mform->get_data()) {
-    //process data if submitted
-    //update only if user can manage activities in course context
-    //idnumber values from the $data
+    // Process data if submitted, update only if user can manage activities in course context
+    // idnumber values from the $data.
     $idnumbers = $data->idnumber;
-    //start transaction
+    // Start transaction.
     $transaction = $DB->start_delegated_transaction();
-    //cycle through all the course modules in the course
-    foreach ($modinfo->cms as $cmid => $cm) {
-        // context instance of the module
+    // Cycle through all the course modules in the course.
+    foreach ($modinfo->get_cms() as $cmid => $cm) {
+        // Context instance of the module.
         $modcontext = get_context_instance(CONTEXT_MODULE, $cmid);
-        // check if the user has capability to edit this module settings
+        // Check if the user has capability to edit this module settings.
         if (has_capability('moodle/course:manageactivities', $modcontext)) {
-            //if this id exists in the array received from $mform
+            // If this id exists in the array received from $mform.
             if (array_key_exists($cmid, $idnumbers['cm'])) {
                 $DB->set_field('course_modules', 'idnumber', null, array('id' => $cmid));
             }
         }
     }
 
-    foreach ($modinfo->cms as $cmid => $cm) {
-        // context instance of the module
+    foreach ($modinfo->get_cms() as $cmid => $cm) {
+        // Context instance of the module.
         $modcontext = get_context_instance(CONTEXT_MODULE, $cmid);
-        // check if the user has capability to edit this module settings
+        // Check if the user has capability to edit this module settings.
         if (has_capability('moodle/course:manageactivities', $modcontext)) {
-            //if this id exists in the array received from $mform
+            // If this id exists in the array received from $mform.
             if (array_key_exists($cmid, $idnumbers['cm'])) {
                 $DB->set_field('course_modules', 'idnumber', $idnumbers['cm'][$cmid],
                         array('id' => $cmid));
-            }
-            // sync idnumber with grade_item
-            if ($grade_item = grade_item::fetch(array('itemtype'=>'mod',
-                 'itemmodule'=>$cm->modname, 'iteminstance'=>$cm->instance,
-                     'itemnumber'=>0, 'courseid' => $course->id))) {
-                if ($grade_item->idnumber != $idnumbers['cm'][$cmid]) {
-                    $grade_item->idnumber = $idnumbers['cm'][$cmid];
-                    //update the grade item object
-                    $grade_item->update();
+                // Sync idnumber with grade_item.
+                if ($gradeitem = grade_item::fetch(array('itemtype'=>'mod',
+                        'itemmodule'=>$cm->modname, 'iteminstance'=>$cm->instance,
+                        'itemnumber'=>0, 'courseid' => $course->id))) {
+                    if ($gradeitem->idnumber != $idnumbers['cm'][$cmid]) {
+                        $gradeitem->idnumber = $idnumbers['cm'][$cmid];
+                        // Update the grade item object.
+                        $gradeitem->update();
+                    }
                 }
             }
         }
     }
 
-    // checking if grade items exists
+    // Checking if grade items exists.
     if (isset($idnumbers['gi']) && has_capability('moodle/grade:manage', $coursecontext)) {
         $gis = $idnumbers['gi'];
 
-        //cycle through each grade items for setting idnumber to null
+        // Cycle through each grade items for setting idnumber to null.
         foreach ($gis as $key => $value) {
-                // setting all idnumbers to null
-                $DB->set_field('grade_items', 'idnumber', null, array('id' => $key));
+            // Setting all idnumbers to null.
+            $DB->set_field('grade_items', 'idnumber', null, array('id' => $key));
         }
-        //cycle through each grade items for setting idnumber
+        // Cycle through each grade items for setting idnumber.
         foreach ($gis as $key => $value) {
-                // setting idnumbers to its new value
-                $DB->set_field('grade_items', 'idnumber', $value, array('id' => $key));
+            // Setting idnumbers to its new value.
+            $DB->set_field('grade_items', 'idnumber', $value, array('id' => $key));
         }
     }
-    //commit transaction
+    // Commit transaction.
     $transaction->allow_commit();
     rebuild_course_cache($course->id);
-
-    //redirect to course view page after updating DB
-    redirect($returnurl);
+    redirect($PAGE->url);
 }
 
-//making log entry
-add_to_log($course->id, 'course', 'report id number',
-     "report/editidnumber/index.php?id=$course->id", $course->id);
+// Prepare activity type menu.
+$select = new single_select($baseurl, 'activitytype', $activitytypes, $activitytype, null, 'activitytypeform');
+$select->set_label(get_string('activitytypefilter', 'report_editidnumber'));
+$select->set_help_icon('activitytypefilter', 'report_editidnumber');
 
-//setting page title and page heading
-$PAGE->set_title($course->shortname .': '. $stridnumberreport);
+// Making log entry.
+add_to_log($course->id, 'course', 'report id number',
+        "report/editidnumber/index.php?id=$course->id", $course->id);
+
+// Set page title and page heading.
+$PAGE->set_title($course->shortname .': '. get_string('editidnumber', 'report_editidnumber'));
 $PAGE->set_heading($course->fullname);
 
-//Displaying header and heading
+// Displaying the form.
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($course->fullname));
 
-//display form
+echo $OUTPUT->heading(get_string('activityfilter', 'report_editidnumber'));
+echo $OUTPUT->render($select);
+
 $mform->display();
 
 echo $OUTPUT->footer();

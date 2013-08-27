@@ -36,6 +36,9 @@ function report_editidnumber_extend_navigation_course($navigation, $course, $con
     global $CFG, $OUTPUT;
     if (has_capability('report/editidnumber:view', $context)) {
         $url = new moodle_url('/report/editidnumber/index.php', array('id' => $course->id));
+        if ($activitytype = optional_param('activitytype', '', PARAM_PLUGIN)) {
+            $url->param('activitytype', $activitytype);
+        }
         $navigation->add(get_string( 'editidnumber', 'report_editidnumber' ),
                 $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
     }
