@@ -96,7 +96,6 @@ class report_editidnumber_form extends moodleform {
                         $sectionname = get_section_name($course, $modinfo->get_section_info($sectionnum));
                         $headername = 'section' . $sectionnum . 'header';
                         $mform->addElement('header', $headername, $sectionname);
-                        $mform->setExpanded($headername, false);
                         $prevsectionnum = $sectionnum;
                     }
                     // Var to store element name.
@@ -152,7 +151,6 @@ class report_editidnumber_form extends moodleform {
             // Section to display Gradebook ID Numbers.
             $mform->addElement('header', 'gradebookitemsheader',
                     get_string('gradebookidnumbers', 'report_editidnumber'));
-            $mform->setExpanded('gradebookitemsheader', false);
 
             // Looping through all grade items.
             foreach ($gradeitems as $gradeitem) {
