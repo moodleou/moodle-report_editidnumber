@@ -102,7 +102,7 @@ if ($mform->is_cancelled()) {
     // Cycle through all the course modules in the course.
     foreach ($modinfo->get_cms() as $cmid => $cm) {
         // Context instance of the module.
-        $modcontext = get_context_instance(CONTEXT_MODULE, $cmid);
+        $modcontext = context_module::instance($cmid);
         // Check if the user has capability to edit this module settings.
         if (has_capability('moodle/course:manageactivities', $modcontext)) {
             // If this id exists in the array received from $mform.
@@ -114,7 +114,7 @@ if ($mform->is_cancelled()) {
 
     foreach ($modinfo->get_cms() as $cmid => $cm) {
         // Context instance of the module.
-        $modcontext = get_context_instance(CONTEXT_MODULE, $cmid);
+        $modcontext = context_module::instance($cmid);
         // Check if the user has capability to edit this module settings.
         if (has_capability('moodle/course:manageactivities', $modcontext)) {
             // If this id exists in the array received from $mform.
