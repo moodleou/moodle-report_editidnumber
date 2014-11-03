@@ -162,8 +162,9 @@ $select->set_label(get_string('activitytypefilter', 'report_editidnumber'));
 $select->set_help_icon('activitytypefilter', 'report_editidnumber');
 
 // Making log entry.
-add_to_log($course->id, 'course', 'report id number',
-        "report/editidnumber/index.php?id=$course->id", $course->id);
+$event = \report_editidnumber\event\report_viewed::create(
+        array('context' => $coursecontext, 'other' => array('activitytype' => $activitytype)));
+$event->trigger();
 
 // Set page title and page heading.
 $PAGE->set_title($course->shortname .': '. get_string('editidnumber', 'report_editidnumber'));

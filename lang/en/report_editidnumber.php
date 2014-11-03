@@ -36,3 +36,4 @@ $string['gradebookidnumbersunderscore'] = 'Gradebook ID numbers';
 $string['idnumbertaken'] = 'This ID number is already taken';
 $string['page-report-editidnumber-index'] = 'Edit course idnumbers';
 $string['pluginname'] = 'ID numbers';
+$string['event:reportviewed'] = 'Edit ID numbers report viewed';
