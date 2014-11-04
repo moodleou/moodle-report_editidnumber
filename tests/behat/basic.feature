@@ -24,15 +24,15 @@ Feature: Edit course plugin ID numbers
         And I log in as "teacher1"
         And I follow "Course 1"
         And I turn editing mode on
-        And I add a "ForumNG" to section "1" and I fill the form with:
-          | Forum name | Test forum name 1 |
-          | Forum introduction | Test forum description |
-        And I add a "ForumNG" to section "2" and I fill the form with:
-          | Forum name | Test forum name 2 |
-          | Forum introduction | Test forum description |
-        And I add a "ForumNG" to section "3" and I fill the form with:
-          | Forum name | Test forum name 3 |
-          | Forum introduction | Test forum description |
+        And I add a "Quiz" to section "1" and I fill the form with:
+          | Name | Test quiz name 1 |
+          | Description | Test forum description |
+        And I add a "Quiz" to section "2" and I fill the form with:
+          | Name | Test quiz name 2 |
+          | Description | Test forum description |
+        And I add a "Quiz" to section "3" and I fill the form with:
+          | Name | Test quiz name 3 |
+          | Description | Test forum description |
         Given I log out
 
     @javascript @_switch_iframe
@@ -44,20 +44,21 @@ Feature: Edit course plugin ID numbers
         Then I should see "Course 1"
         And I should see "Activity view filter "
         And I follow "Expand all"
-        And I should see "Test forum name 1"
-        And I should see "Test forum name 2"
-        And I should see "Test forum name 3"
+        And I should see "Test quiz name 1"
+        And I should see "Test quiz name 2"
+        And I should see "Test quiz name 3"
+        # In ouvle, the three quizzes get cmids 2, 3, 4 (because one module creates
+        # an instance of itself on install). In core Moodle they are 1, 2, 3.
+        # So, to aviod problems we only test with cmids 2 and 3.
         When I set the following fields to these values:
             | idnumber_cm_2 | 1 |
             | idnumber_cm_3 | 2 |
-            | idnumber_cm_4 | 3 |
         And I press "Save changes"
         Then I should see "Course 1"
         And I should see "Activity view filter "
         And I follow "Expand all"
-        And I should see "Test forum name 1"
-        And I should see "Test forum name 2"
-        And I should see "Test forum name 3"
+        And I should see "Test quiz name 1"
+        And I should see "Test quiz name 2"
+        And I should see "Test quiz name 3"
         And the field "idnumber_cm_2" matches value "1"
         And the field "idnumber_cm_3" matches value "2"
-        And the field "idnumber_cm_4" matches value "3"
