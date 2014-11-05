@@ -70,7 +70,7 @@ foreach ($modinfo->get_sections() as $sectionnum => $section) {
         $activitytypes[$cm->modname] = get_string('modulename', $cm->modname);
     }
 }
-collatorlib::asort($activitytypes);
+core_collator::asort($activitytypes);
 
 if ($activitiesdisplayed <= REPORT_EDITIDNUMBER_ENABLE_FILTER_THRESHOLD) {
     $activitytypes = array('' => get_string('all')) + $activitytypes;
