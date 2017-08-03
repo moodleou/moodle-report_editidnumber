@@ -38,7 +38,6 @@ Feature: Edit course plugin ID numbers
   @javascript @_switch_iframe
   Scenario: Test edit ID number report can be used to change plugin instance ID numbers
     When I log in as "admin"
-    And I am on site homepage
     And I am on "Course 1" course homepage
     And I navigate to "ID numbers" node in "Course administration > Reports"
     And I follow "ID numbers"
