@@ -22,7 +22,7 @@ Feature: Edit course plugin ID numbers
       | student3 | C1     | student        |
       | student4 | C1     | student        |
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I turn editing mode on
     And I add a "Quiz" to section "1" and I fill the form with:
       | Name | Test quiz name 1              |
@@ -39,7 +39,7 @@ Feature: Edit course plugin ID numbers
   Scenario: Test edit ID number report can be used to change plugin instance ID numbers
     When I log in as "admin"
     And I am on site homepage
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I navigate to "ID numbers" node in "Course administration > Reports"
     And I follow "ID numbers"
     Then I should see "Course 1"
