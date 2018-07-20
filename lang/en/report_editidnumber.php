@@ -37,3 +37,4 @@ $string['idnumbertaken'] = 'This ID number is already taken';
 $string['page-report-editidnumber-index'] = 'Edit course idnumbers';
 $string['pluginname'] = 'ID numbers';
 $string['event:reportviewed'] = 'Edit ID numbers report viewed';
+$string['privacy:metadata'] = 'The ID numbers plugin does not store any personal data.';
