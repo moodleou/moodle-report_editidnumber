@@ -146,7 +146,7 @@ class report_editidnumber_form extends moodleform {
 
         // Course module will be always fetched,
         // so lenghth will always be 1 if no gread item is fetched.
-        if (is_array($gradeitems) && (count($gradeitems) >1)) {
+        if (is_array($gradeitems) && (count($gradeitems) > 1)) {
             usort($gradeitems, 'report_editidnumber_sort_array_by_sortorder');
 
             // Section to display Gradebook ID Numbers.

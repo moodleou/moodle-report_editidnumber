@@ -122,9 +122,9 @@ if ($mform->is_cancelled()) {
                 $DB->set_field('course_modules', 'idnumber', $idnumbers['cm'][$cmid],
                         array('id' => $cmid));
                 // Sync idnumber with grade_item.
-                if ($gradeitem = grade_item::fetch(array('itemtype'=>'mod',
-                        'itemmodule'=>$cm->modname, 'iteminstance'=>$cm->instance,
-                        'itemnumber'=>0, 'courseid' => $course->id))) {
+                if ($gradeitem = grade_item::fetch(array('itemtype' => 'mod',
+                        'itemmodule' => $cm->modname, 'iteminstance' => $cm->instance,
+                        'itemnumber' => 0, 'courseid' => $course->id))) {
                     if ($gradeitem->idnumber != $idnumbers['cm'][$cmid]) {
                         $gradeitem->idnumber = $idnumbers['cm'][$cmid];
                         // Update the grade item object.
