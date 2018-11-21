@@ -1,6 +1,11 @@
 # Change log for the Edit ID numbers report
 
 
+## Changes in 2.5
+
+* Fix Behat for Moodle 3.6.
+
+
 ## Changes in 2.4
 
 * Privacy API implementation.
