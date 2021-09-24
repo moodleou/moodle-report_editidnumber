@@ -26,6 +26,7 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->dirroot . '/course/lib.php');
 require_once(dirname(__FILE__) . '/form.php');
+use core\report_helper;
 
 define('REPORT_EDITIDNUMBER_ENABLE_FILTER_THRESHOLD', 50);
 
@@ -42,7 +43,9 @@ $urlparams = array('id' => $id);
 if ($activitytype) {
     $urlparams['activitytype'] = $activitytype;
 }
-$PAGE->set_url('/report/editidnumber/index.php', $urlparams);
+$pageurl = new moodle_url('/report/editidnumber/index.php', $urlparams);
+report_helper::save_selected_report($id, $pageurl);
+$PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('admin');
 
 // Check permissions.
@@ -172,6 +175,11 @@ $PAGE->set_heading($course->fullname);
 
 // Displaying the form.
 echo $OUTPUT->header();
+
+// Print the selected dropdown.
+$pluginname = get_string('pluginname', 'report_editidnumber');
+report_helper::print_report_selector($pluginname);
+
 echo $OUTPUT->heading(format_string($course->fullname));
 
 echo $OUTPUT->heading(get_string('activityfilter', 'report_editidnumber'));
