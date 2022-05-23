@@ -1,5 +1,12 @@
 # Change log for the Edit ID numbers report
 
+## Changes in 2.6
+
+* This version works with Moodle 4.0.
+* Updated to use Moodle 3.11 navigation
+* Switch from Travis to Github actions.
+* Update Travis config.
+* Update to Travis-CI config.
 
 ## Changes in 2.5
 
