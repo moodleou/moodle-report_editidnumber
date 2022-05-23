@@ -37,8 +37,7 @@ Feature: Edit course plugin ID numbers
 
   @javascript @_switch_iframe
   Scenario: Test edit ID number report can be used to change plugin instance ID numbers
-    When I log in as "admin"
-    And I am on "Course 1" course homepage
+    When I am on the "Course 1" "course" page logged in as "admin"
     And I navigate to "Reports > ID numbers" in current page administration
     And I follow "ID numbers"
     Then I should see "Course 1"
@@ -47,8 +46,8 @@ Feature: Edit course plugin ID numbers
     And I should see "Test quiz name 1"
     And I should see "Test quiz name 2"
     And I should see "Test quiz name 3"
-    And I set the field with xpath "//fieldset[@id='id_section2header']/div[@class='fcontainer clearfix']/div[2]/div[contains(@class,'felement')]/input[@type='text']" to "1"
-    And I set the field with xpath "//fieldset[@id='id_section3header']/div[@class='fcontainer clearfix']/div[2]/div[contains(@class,'felement')]/input[@type='text']" to "2"
+    And I set the field with xpath "//fieldset[@id='id_section2header']//div[contains(@class,'felement')]/input[@type='text']" to "1"
+    And I set the field with xpath "//fieldset[@id='id_section3header']//div[contains(@class,'felement')]/input[@type='text']" to "2"
     And I press "Save changes"
     Then I should see "Course 1"
     And I should see "Activity view filter "
@@ -56,5 +55,5 @@ Feature: Edit course plugin ID numbers
     And I should see "Test quiz name 1"
     And I should see "Test quiz name 2"
     And I should see "Test quiz name 3"
-    And the "value" attribute of "//fieldset[@id='id_section2header']/div[@class='fcontainer clearfix']/div[2]/div[contains(@class,'felement')]/input[@type='text']" "xpath_element" should contain "1"
-    And the "value" attribute of "//fieldset[@id='id_section3header']/div[@class='fcontainer clearfix']/div[2]/div[contains(@class,'felement')]/input[@type='text']" "xpath_element" should contain "2"
+    And the "value" attribute of "//fieldset[@id='id_section2header']//div[contains(@class,'felement')]/input[@type='text']" "xpath_element" should contain "1"
+    And the "value" attribute of "//fieldset[@id='id_section3header']//div[contains(@class,'felement')]/input[@type='text']" "xpath_element" should contain "2"

@@ -44,7 +44,6 @@ if ($activitytype) {
     $urlparams['activitytype'] = $activitytype;
 }
 $pageurl = new moodle_url('/report/editidnumber/index.php', $urlparams);
-report_helper::save_selected_report($id, $pageurl);
 $PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('admin');
 

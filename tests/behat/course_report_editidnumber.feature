@@ -1,5 +1,5 @@
 @report @report_editidnumber @ou @ou_vle
-Feature: Edit idnumber report navigation
+Feature: In a course administration page, navigate through report page, test for course ID numbers page
   In order to navigate through report page
   As an admin
   Go to course administration -> Reports -> ID numbers
@@ -17,7 +17,7 @@ Feature: Edit idnumber report navigation
       | student1 | C1 | student |
 
   @javascript
-  Scenario: Selector should be available in the Edit idnumber report
+  Scenario: Selector should be available in the Activities and resources page
     Given I log in as "admin"
     And I am on "Course 1" course homepage
     When I navigate to "Reports > ID numbers" in current page administration
