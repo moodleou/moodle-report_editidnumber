@@ -34,12 +34,12 @@ $id = required_param('id', PARAM_INT); // Course id.
 $activitytype = optional_param('activitytype', '', PARAM_PLUGIN);
 
 // Should be a valid course id.
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
 require_login($course);
 
 // Setup page.
-$urlparams = array('id' => $id);
+$urlparams = ['id' => $id];
 if ($activitytype) {
     $urlparams['activitytype'] = $activitytype;
 }
@@ -58,7 +58,7 @@ $cms = $modinfo->get_cms();
 // Prepare a list of activity types used in this course, and count the number that
 // might be displayed.
 $activitiesdisplayed = 0;
-$activitytypes = array();
+$activitytypes = [];
 foreach ($modinfo->get_sections() as $sectionnum => $section) {
     foreach ($section as $cmid) {
         $cm = $cms[$cmid];
@@ -75,22 +75,22 @@ foreach ($modinfo->get_sections() as $sectionnum => $section) {
 core_collator::asort($activitytypes);
 
 if ($activitiesdisplayed <= REPORT_EDITIDNUMBER_ENABLE_FILTER_THRESHOLD) {
-    $activitytypes = array('' => get_string('all')) + $activitytypes;
+    $activitytypes = ['' => get_string('all')] + $activitytypes;
 }
 
 // If activity count is above the threshold, activate the filter controls.
 if (!$activitytype && $activitiesdisplayed > REPORT_EDITIDNUMBER_ENABLE_FILTER_THRESHOLD) {
     reset($activitytypes);
     redirect(new moodle_url('/report/editidnumber/index.php',
-            array('id' => $id, 'activitytype' => key($activitytypes))));
+            ['id' => $id, 'activitytype' => key($activitytypes)]));
 }
 
 // Creating form instance, passed course id as parameter to action url.
-$baseurl = new moodle_url('/report/editidnumber/index.php', array('id' => $id));
-$mform = new report_editidnumber_form($baseurl, array('modinfo' => $modinfo,
-        'course' => $course, 'activitytype' => $activitytype));
+$baseurl = new moodle_url('/report/editidnumber/index.php', ['id' => $id]);
+$mform = new report_editidnumber_form($baseurl, ['modinfo' => $modinfo,
+        'course' => $course, 'activitytype' => $activitytype]);
 
-$returnurl = new moodle_url('/course/view.php', array('id' => $id));
+$returnurl = new moodle_url('/course/view.php', ['id' => $id]);
 if ($mform->is_cancelled()) {
     // Redirect to course view page if form is cancelled.
     redirect($returnurl);
@@ -109,7 +109,7 @@ if ($mform->is_cancelled()) {
         if (has_capability('moodle/course:manageactivities', $modcontext)) {
             // If this id exists in the array received from $mform.
             if (array_key_exists($cmid, $idnumbers['cm'])) {
-                $DB->set_field('course_modules', 'idnumber', null, array('id' => $cmid));
+                $DB->set_field('course_modules', 'idnumber', null, ['id' => $cmid]);
             }
         }
     }
@@ -122,11 +122,11 @@ if ($mform->is_cancelled()) {
             // If this id exists in the array received from $mform.
             if (array_key_exists($cmid, $idnumbers['cm'])) {
                 $DB->set_field('course_modules', 'idnumber', $idnumbers['cm'][$cmid],
-                        array('id' => $cmid));
+                        ['id' => $cmid]);
                 // Sync idnumber with grade_item.
-                if ($gradeitem = grade_item::fetch(array('itemtype' => 'mod',
+                if ($gradeitem = grade_item::fetch(['itemtype' => 'mod',
                         'itemmodule' => $cm->modname, 'iteminstance' => $cm->instance,
-                        'itemnumber' => 0, 'courseid' => $course->id))) {
+                        'itemnumber' => 0, 'courseid' => $course->id])) {
                     if ($gradeitem->idnumber != $idnumbers['cm'][$cmid]) {
                         $gradeitem->idnumber = $idnumbers['cm'][$cmid];
                         // Update the grade item object.
@@ -144,12 +144,12 @@ if ($mform->is_cancelled()) {
         // Cycle through each grade items for setting idnumber to null.
         foreach ($gis as $key => $value) {
             // Setting all idnumbers to null.
-            $DB->set_field('grade_items', 'idnumber', null, array('id' => $key));
+            $DB->set_field('grade_items', 'idnumber', null, ['id' => $key]);
         }
         // Cycle through each grade items for setting idnumber.
         foreach ($gis as $key => $value) {
             // Setting idnumbers to its new value.
-            $DB->set_field('grade_items', 'idnumber', $value, array('id' => $key));
+            $DB->set_field('grade_items', 'idnumber', $value, ['id' => $key]);
         }
     }
     // Commit transaction.
@@ -165,7 +165,7 @@ $select->set_help_icon('activitytypefilter', 'report_editidnumber');
 
 // Making log entry.
 $event = \report_editidnumber\event\report_viewed::create(
-        array('context' => $coursecontext, 'other' => array('activitytype' => $activitytype)));
+        ['context' => $coursecontext, 'other' => ['activitytype' => $activitytype]]);
 $event->trigger();
 
 // Set page title and page heading.
