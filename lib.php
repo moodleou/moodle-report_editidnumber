@@ -17,12 +17,10 @@
 /**
  * Library functions for report_editgroups.
  *
- * @package   report_editgroups
+ * @package   report_editidnumber
  * @copyright 2011 The Open University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
 
 
 /**
@@ -35,7 +33,7 @@ defined('MOODLE_INTERNAL') || die;
 function report_editidnumber_extend_navigation_course($navigation, $course, $context) {
     global $CFG, $OUTPUT;
     if (has_capability('report/editidnumber:view', $context)) {
-        $url = new moodle_url('/report/editidnumber/index.php', array('id' => $course->id));
+        $url = new moodle_url('/report/editidnumber/index.php', ['id' => $course->id]);
         if ($activitytype = optional_param('activitytype', '', PARAM_PLUGIN)) {
             $url->param('activitytype', $activitytype);
         }
@@ -52,11 +50,11 @@ function report_editidnumber_extend_navigation_course($navigation, $course, $con
  * @return array
  */
 function report_editidnumber_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    return array(
+    return [
         '*'                         => get_string('page-x', 'pagetype'),
         'report-*'                  => get_string('page-report-x', 'pagetype'),
         'report-editidnumber-index' => get_string('page-report-editidnumber-index',  'report_editidnumber'),
-    );
+    ];
 }
 
 /**

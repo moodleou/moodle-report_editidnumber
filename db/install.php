@@ -22,8 +22,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
+/**
+ * Executes post-installation and migration tasks for the report_editidnumber plugin.
+ *
+ * Handles permission migration and cleanup from previous plugin versions.
+ *
+ * @return void
+ */
 function xmldb_report_editidnumber_install() {
     global $DB;
 
@@ -32,10 +37,10 @@ function xmldb_report_editidnumber_install() {
     // and clone the permissions from moodle/site:viewreports, but if we are upgrading
     // a Moodle that had the old course report plugin installed, then we get rid of the
     // new cloned capabilities, and transfer the old permissions.
-    if ($DB->record_exists('role_capabilities', array('capability' => 'coursereport/editidnumber:view'))) {
-        $DB->delete_records('role_capabilities', array('capability' => 'report/editidnumber:view'));
+    if ($DB->record_exists('role_capabilities', ['capability' => 'coursereport/editidnumber:view'])) {
+        $DB->delete_records('role_capabilities', ['capability' => 'report/editidnumber:view']);
         $DB->set_field('role_capabilities', 'capability', 'report/editidnumber:view',
-                array('capability' => 'coursereport/editidnumber:view'));
+                ['capability' => 'coursereport/editidnumber:view']);
     }
 
     // This is a hack which is needed for cleanup of original coursereport_completion stuff.
@@ -44,6 +49,6 @@ function xmldb_report_editidnumber_install() {
 
     // Update existing block page patterns.
     $DB->set_field('block_instances', 'pagetypepattern', 'report-editidnumber-index',
-            array('pagetypepattern' => 'course-report-editidnumber-index'));
+            ['pagetypepattern' => 'course-report-editidnumber-index']);
 }
 

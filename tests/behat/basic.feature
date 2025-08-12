@@ -22,27 +22,23 @@ Feature: Edit course plugin ID numbers
       | student3 | C1     | student        |
       | student4 | C1     | student        |
     And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I turn editing mode on
-    And I add a "Quiz" to section "1" and I fill the form with:
-      | Name | Test quiz name 1              |
-      | Description | Test forum description |
-    And I add a "Quiz" to section "2" and I fill the form with:
-      | Name | Test quiz name 2              |
-      | Description | Test forum description |
-    And I add a "Quiz" to section "3" and I fill the form with:
-      | Name | Test quiz name 3              |
-      | Description | Test forum description |
-    Given I log out
+    And I am on "Course 1" course homepage with editing mode on
+    And the following "activities" exist:
+      | activity | course | section | name             | intro                  |
+      | quiz     | C1     | 1       | Test quiz name 1 | Test forum description |
+      | quiz     | C1     | 2       | Test quiz name 2 | Test forum description |
+      | quiz     | C1     | 3       | Test quiz name 3 | Test forum description |
+    And I log out
 
   @javascript @_switch_iframe
   Scenario: Test edit ID number report can be used to change plugin instance ID numbers
     When I am on the "Course 1" "course" page logged in as "admin"
-    And I navigate to "Reports > ID numbers" in current page administration
+    And I navigate to "Reports" in current page administration
+    And I click on "ID numbers" "link"
     And I follow "ID numbers"
     Then I should see "Course 1"
     And I should see "Activity view filter "
-    And I follow "Expand all"
+    And I click on "Expand all" "link" in the "region-main" "region"
     And I should see "Test quiz name 1"
     And I should see "Test quiz name 2"
     And I should see "Test quiz name 3"
@@ -51,7 +47,7 @@ Feature: Edit course plugin ID numbers
     And I press "Save changes"
     Then I should see "Course 1"
     And I should see "Activity view filter "
-    And I follow "Expand all"
+    And I click on "Expand all" "link" in the "region-main" "region"
     And I should see "Test quiz name 1"
     And I should see "Test quiz name 2"
     And I should see "Test quiz name 3"

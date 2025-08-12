@@ -20,7 +20,7 @@ Feature: In a course administration page, navigate through report page, test for
   Scenario: Selector should be available in the Activities and resources page
     Given I log in as "admin"
     And I am on "Course 1" course homepage
-    When I navigate to "Reports > ID numbers" in current page administration
-    Then "Report" "field" should exist
-    And the "Report" select box should contain "ID numbers"
-    And the field "Report" matches value "ID numbers"
+    When I navigate to "Reports" in current page administration
+    And I click on "ID numbers" "link"
+    Then "Report" "field" should exist in the "tertiary-navigation" "region"
+    And I should see "ID numbers" in the "tertiary-navigation" "region"

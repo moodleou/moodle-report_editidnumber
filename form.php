@@ -37,6 +37,7 @@ require_once(dirname(__FILE__) . '/lib.php');
  */
 class report_editidnumber_form extends moodleform {
 
+    #[\Override]
     public function definition() {
         global $CFG, $COURSE, $DB;
         $mform = $this->_form;
@@ -53,7 +54,7 @@ class report_editidnumber_form extends moodleform {
 
         // Defining array for providing (see above) link from grade items
         // which are associated with course modules.
-        $modgradeitemmap = array();
+        $modgradeitemmap = [];
 
         // Store current activity type.
         $mform->addElement('hidden', 'activitytype', $activitytype);
@@ -103,10 +104,10 @@ class report_editidnumber_form extends moodleform {
                     $elname = '';
 
                     // Display activity name.
-                    $iconmarkup = html_writer::empty_tag('img', array(
-                            'src' => $cm->get_icon_url(), 'class' => 'activityicon', 'alt' => '' ));
+                    $iconmarkup = html_writer::empty_tag('img', [
+                            'src' => $cm->get_icon_url(), 'class' => 'activityicon', 'alt' => '']);
                     $stractivityname = html_writer::tag('strong' , $iconmarkup . $cm->name,
-                            array('id' => null, 'class' => renderer_base::prepare_classes('main')));
+                            ['id' => null, 'class' => renderer_base::prepare_classes('main')]);
 
                     $elname = 'idnumber[cm]['.$cm->id.']';
                     // Creating element id.
@@ -125,7 +126,7 @@ class report_editidnumber_form extends moodleform {
 
                     // Element to display ID number.
                     $mform->addElement('text', $elname, get_string('idnumbermod'),
-                             array("id" => $elid), array("id" => $elid));
+                             ["id" => $elid], ["id" => $elid]);
                     $mform->setType($elname, PARAM_RAW);
                     $mform->addHelpButton($elname, 'idnumbermod');
                     if (isset($cm->idnumber)) {
@@ -142,7 +143,7 @@ class report_editidnumber_form extends moodleform {
         $readonlygrades = !has_capability('moodle/grade:manage', $coursecontext);
 
         // Fetching Gradebook items.
-        $gradeitems = grade_item::fetch_all(array('courseid' => $course->id));
+        $gradeitems = grade_item::fetch_all(['courseid' => $course->id]);
 
         // Course module will be always fetched,
         // so lenghth will always be 1 if no gread item is fetched.
@@ -177,7 +178,7 @@ class report_editidnumber_form extends moodleform {
                     // In case of itemtype category,
                     // fetching the category fullname from grade_categories table.
                     $gradecategory = $DB->get_record("grade_categories",
-                             array("id" => $gradeitem->iteminstance));
+                             ["id" => $gradeitem->iteminstance]);
                     $mform->addElement('text', $elname, $gradecategory->fullname);
                     $mform->setType($elname, PARAM_RAW);
                     $mform->setDefault($elname, $gradeitem->idnumber);
@@ -203,6 +204,7 @@ class report_editidnumber_form extends moodleform {
         }
     }
 
+    #[\Override]
     // Perform some extra moodle validation.
     public function validation($data, $files) {
 
@@ -226,7 +228,7 @@ class report_editidnumber_form extends moodleform {
         }
         ksort($data['idnumber']['cm']);
 
-        $errors = array();
+        $errors = [];
         $cmidnumbers = $data['idnumber']['cm']; // Array for course module id numbers.
         if (!empty($cmidnumbers)) {
             $possibleduplicates = $cmidnumbers;
